@@ -1,0 +1,194 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------
+   Network Flight Recorder — design tokens
+   Warm graphite foundation, ivory type, restrained signal colours.
+---------------------------------------------------------------- */
+@theme {
+  --font-sans: "Geist", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-serif: "Newsreader", "Iowan Old Style", Georgia, serif;
+
+  --color-ground: #161412;
+  --color-panel: #1b1916;
+  --color-raised: #221f1b;
+  --color-hover: #292520;
+  --color-line: #2d2924;
+  --color-line-strong: #3d3831;
+
+  --color-fg: #ebe6dc;
+  --color-fg-2: #bab3a6;
+  --color-fg-3: #8b8479;
+  --color-fg-4: #615b53;
+
+  --color-ivory: #ece6d9;
+  --color-paper: #f1ece2;
+  --color-paper-2: #e7e1d4;
+  --color-ink: #1f1c18;
+  --color-ink-2: #5a544a;
+
+  --color-amber: #d09b47;
+  --color-amber-dim: #4a3b24;
+  --color-crit: #cd5d48;
+  --color-crit-dim: #4b2620;
+  --color-ok: #93a67c;
+  --color-ok-dim: #343c2c;
+  --color-signal: #dccb9f;
+
+  --text-2xs: 0.6875rem;
+  --text-2xs--line-height: 1rem;
+
+  --ease-snap: cubic-bezier(0.2, 0.7, 0.1, 1);
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    background: var(--color-ground);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: var(--color-signal);
+    color: var(--color-ink);
+  }
+  :focus-visible {
+    outline: 1px solid var(--color-signal);
+    outline-offset: 2px;
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-line-strong) transparent;
+  }
+  input[type="range"] {
+    accent-color: var(--color-signal);
+  }
+}
+
+@layer components {
+  /* Small uppercase labels used for section headers and field names */
+  .label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-fg-3);
+  }
+  .mono {
+    font-family: var(--font-mono);
+    font-feature-settings: "zero", "ss02";
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+  .hairline {
+    border-color: var(--color-line);
+  }
+}
+
+/* Flow direction animation for active anomalous edges */
+@keyframes nfr-flow {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+.nfr-flow {
+  animation: nfr-flow 1.6s linear infinite;
+}
+@keyframes nfr-pulse {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+.nfr-pulse {
+  animation: nfr-pulse 2.4s ease-in-out infinite;
+}
+@keyframes nfr-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.nfr-enter {
+  animation: nfr-enter 0.32s var(--ease-snap) both;
+}
+@keyframes nfr-slide {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.nfr-slide {
+  animation: nfr-slide 0.22s var(--ease-snap) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nfr-flow,
+  .nfr-pulse,
+  .nfr-enter,
+  .nfr-slide {
+    animation: none;
+  }
+}
+html.reduce-motion .nfr-flow,
+html.reduce-motion .nfr-pulse,
+html.reduce-motion .nfr-enter,
+html.reduce-motion .nfr-slide {
+  animation: none;
+}
+
+/* Print: the investigation report becomes a clean document */
+@media print {
+  @page {
+    size: A4;
+    margin: 14mm;
+  }
+  html,
+  body,
+  #root {
+    height: auto !important;
+    overflow: visible !important;
+  }
+  body {
+    background: #fff !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-sheet {
+    box-shadow: none !important;
+    margin: 0 !important;
+    max-width: none !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+  .print-root {
+    background: #fff !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    height: auto !important;
+  }
+  .print-avoid-break {
+    break-inside: avoid;
+  }
+}
